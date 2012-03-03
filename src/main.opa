@@ -23,7 +23,7 @@
  */
 
 import stdlib.system
-import stdlib.themes.bootstrap.core
+import stdlib.themes.bootstrap
 import mindwave
 
 /** Constants **/
@@ -37,7 +37,7 @@ MW_TIMER = 1000
 
 type mindstate = (int, int)
 type user = { int id, string name, option(mindstate) mindwave }
-type source = { system } or { user user }
+type source = { system } or { string user }
 type message = {
   source source,
   string text,
@@ -63,30 +63,10 @@ or {user mindstate}
 
 database intmap(message) /history
 
+/** Top level values **/
+
 exposed Network.network(network_msg) room = Network.cloud("room")
 private reference(intmap(user)) users = ServerReference.create(IntMap.empty)
-private launch_date = Date.now()
-
-/** Page **/
-
-watch_button =
-  <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user={GITHUB_USER}&repo={GITHUB_REPO}&type=watch&count=true&size=large"
-          allowtransparency="true" frameborder="0" scrolling="0" width="146px" height="30px"></iframe>
-
-fork_button =
-  <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user={GITHUB_USER}&repo={GITHUB_REPO}&type=fork&count=true&size=large"
-          allowtransparency="true" frameborder="0" scrolling="0" width="146px" height="30px"></iframe>
-
-function build_page(content) {
-  <div id=#header>
-    <h2 class="pull-left">OpaChat</h2>
-    <div class="buttons pull-left">
-      {watch_button}
-      {fork_button}
-    </div>
-  </div>
-  <div id=#main>{content}</div>
-}
 
 /** Connection **/
 
@@ -109,20 +89,16 @@ _ = Network.observe(server_observe, room)
 
 /** Stats **/
 
-server function mem() {
-  System.get_memory_usage()/(1024*1024)
-}
-
+// Compute uptime and memory usage (MB)
 server function compute_stats() {
-  uptime_duration = Date.between(launch_date, Date.now())
-  uptime = Date.of_duration(uptime_duration)
-  uptime = Date.shift_backward(uptime, Date.to_duration(Date.milliseconds(3600000))) // 1 hour shift
-  (uptime, mem())
+  uptime = Date.between(System.gmt_launch_date, Date.now_gmt())
+  mem = System.get_memory_usage()/(1024*1024)
+  (uptime, mem)
 }
 
 client @async function update_stats((uptime, mem)) {
-  #uptime = <>Uptime: {Date.to_string_time_only(uptime)}</>
-  #memory = <>Memory: {mem} Mo</>
+  #uptime = <>Uptime: {Duration.to_formatted_string(Duration.long_time_printer, uptime)}</>
+  #memory = <>Memory: {mem} MB</>
 }
 
 /** Users **/
@@ -193,85 +169,73 @@ client function check_mindstate(user) {
 
 /** Conversation **/
 
+// converts a source into HTML
 function source_to_html(source) {
   match (source) {
   case {system} : <span class="system"/>
-  case {~user} : <span class="user">{user.name}</span>
+  case {~user} : <span class="user">{user}</span>
   }
 }
 
-client @async function message_update(stats, list(message) messages) {
+private client function generic_update(stats, elements, printer) {
   update_stats(stats)
-  List.iter(function(message) {
-    date = Date.to_formatted_string(Date.default_printer, message.date)
-    time = Date.to_string_time_only(message.date)
+  List.iter(function(element) {
+    date = Date.to_formatted_string(Date.default_printer, element.date)
+    time = Date.to_string_time_only(element.date)
     line = <div class="line">
               <span class="date" title="{date}">{time}</span>
-              { source_to_html(message.source) }
-              <span class="message">{message.text}</span>
+              {printer(element)}
            </div>
     #conversation =+ line
-  }, messages)
+  }, elements)
   Dom.scroll_to_bottom(#conversation)
+}
+
+client @async function message_update(stats, list(message) messages) {
+  generic_update(stats, messages, function(message) {
+    source_to_html(message.source) <+>
+    <span class="message">{message.text}</span>
+  })
 }
 
 client @async function media_update(stats, list(media) medias) {
-  update_stats(stats)
-  List.iter(function(media) {
-    date = Date.to_formatted_string(Date.default_printer, media.date)
-    time = Date.to_string_time_only(media.date)
-    media_parser = parser {
-      case "image/" .*: {image}
-      case "audio/" .*: {audio}
-      case "video/" .*: {video}
-    }
-    line = <div class="line">
-              <span class="date" title="{date}">{time}</span>
-              { source_to_html(media.source) }
-              { match (Parser.try_parse(media_parser, media.mimetype)) {
-                case {some:{image}}:
-                  <img src="{media.src}" alt="{media.name}"/>
-                case {some:{audio}}:
-                  <audio src="{media.src}"
-                         controls="controls"
-                         type="{media.mimetype}"
-                         preload="auto">
-                    Your browser does not support the audio tag!
-                  </audio>
-                case {some:{video}}:
-                  <video src="{media.src}"
-                         controls="controls"
-                         preload="auto"
-                         type="{media.name}">
-                    Your browser does not support the video tag!
-                  </video>
-                default:
-                  <span class="media {media.mimetype}"> is sharing a file :
-                    <a target="_blank" href="{media.src}"
-                       draggable="true"
-                       data-downloadurl="{media.mimetype}:{media.name}:{media.src}">{media.name}</a>
-                  </span>
-                } }
-           </div>
-    #conversation =+ line
-  }, medias)
-  Dom.scroll_to_bottom(#conversation)
-}
-
-exposed @async function broadcast(user, text) {
-  message = {source:user, ~text, date:Date.now()}
-  /history[?] <- message
-  Network.broadcast({~message}, room)
-}
-
-client @async function send_message(user, _) {
-  broadcast(user, Dom.get_value(#entry))
-  Dom.clear_value(#entry)
+  media_parser = parser {
+    case "image/" .*: {image}
+    case "audio/" .*: {audio}
+    case "video/" .*: {video}
+  }
+  generic_update(stats, medias, function(media) {
+    source_to_html(media.source) <+>
+    ( match (Parser.try_parse(media_parser, media.mimetype)) {
+      case {some:{image}}:
+        <img src="{media.src}" alt="{media.name}"/>
+      case {some:{audio}}:
+        <audio src="{media.src}"
+               controls="controls"
+               type="{media.mimetype}"
+               preload="auto">
+          Your browser does not support the audio tag!
+        </audio>
+      case {some:{video}}:
+        <video src="{media.src}"
+               controls="controls"
+               preload="auto"
+               type="{media.name}">
+          Your browser does not support the video tag!
+        </video>
+      default:
+        <span class="media {media.mimetype}"> is sharing a file :
+          <a target="_blank" href="{media.src}"
+             draggable="true"
+             data-downloadurl="{media.mimetype}:{media.name}:{media.src}">{media.name}</a>
+        </span>
+      } )
+  })
 }
 
 server function file_uploaded(user)(name, mimetype, key) {
   media = {
-    source: {~user},
+    source: {user:user.name},
     ~name,
     src: "/file/{key}",
     ~mimetype,
@@ -390,13 +354,22 @@ server mindwave_flash =
     </object>
   </div>
 
-server @async function enter_chat(user_name, has_mindwave, client_channel) {
+client @async function send_message(broadcast, _) {
+  broadcast(Dom.get_value(#entry))
+  Dom.clear_value(#entry)
+}
+
+exposed @async function enter_chat(user_name, has_mindwave, client_channel) {
   user = {
     id: Random.int(max_int),
     name: user_name,
     mindwave: if (has_mindwave) some((0, 0)) else none,
   }
-  // #Body is the default body id in Opa
+  broadcast = function(text) {
+    message = {source:{user:user_name}, ~text, date:Date.now()}
+    /history[?] <- message
+    Network.broadcast({~message}, room)
+  }
   #main =
     <div id=#sidebar>
       <h3>Users online</h3>
@@ -414,7 +387,7 @@ server @async function enter_chat(user_name, has_mindwave, client_channel) {
         <input id=#entry
                autofocus="autofocus"
                onready={function(_){Dom.give_focus(#entry)}}
-               onnewline={send_message({~user}, _)}
+               onnewline={send_message(broadcast, _)}
                x-webkit-speech="x-webkit-speech"/>
       </div>
     </div> <+>
@@ -426,6 +399,27 @@ client @async function join(_) {
   client_channel = Session.make_callback(ignore)
   has_mindwave = MindWave.is_present()
   enter_chat(name, has_mindwave, client_channel)
+}
+
+/** Server **/
+
+watch_button =
+  <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user={GITHUB_USER}&repo={GITHUB_REPO}&type=watch&count=true&size=large"
+          allowtransparency="true" frameborder="0" scrolling="0" width="146px" height="30px"></iframe>
+
+fork_button =
+  <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user={GITHUB_USER}&repo={GITHUB_REPO}&type=fork&count=true&size=large"
+          allowtransparency="true" frameborder="0" scrolling="0" width="146px" height="30px"></iframe>
+
+function build_page(content) {
+  <div id=#header>
+    <h2 class="pull-left">OpaChat</h2>
+    <div class="buttons pull-right">
+      {watch_button}
+      {fork_button}
+    </div>
+  </div>
+  <div id=#main>{content}</div>
 }
 
 // Page headers
@@ -478,8 +472,6 @@ Resource.register_external_js("/resources/neurosky/FlashToJs/api.js")
 Server.start(Server.http, [
   { resources : @static_resource_directory("resources") }, // include resources directory
   { register : [
-      "/resources/css/bootstrap.min.css",
-      "/resources/css/bootstrap-responsive.min.css",
       "/resources/css/style.css",
       "/resources/neurosky/icons.css",
     ] }, // include CSS in headers

@@ -1,11 +1,9 @@
-S = @ # silent
-
 .PHONY: all clean run plugins $(EXE)
 
 OPA ?= opa
 OPA-PLUGIN ?= opa-plugin-builder
 OPA-OPT ?= --parser js-like
-MINIMAL-VERSION = 1046
+MINIMAL-VERSION = 1393
 EXE = opa_chat.exe
 
 all: $(EXE)
@@ -20,7 +18,7 @@ $(EXE): plugins src/*.opa resources/*
 	$(OPA) $(OPA-OPT) --minimal-version $(MINIMAL-VERSION) *.opp src/*.opa -o $(EXE)
 
 run: all
-	$(S) ./$(EXE) $(RUN-OPT) || exit 0 ## prevent ugly make error 130 :) ##
+	./$(EXE) $(RUN-OPT) || true ## prevent ugly make error 130 :) ##
 
 clean:
 	rm -Rf *.opx* *.opp*
