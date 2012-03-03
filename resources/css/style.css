@@ -166,3 +166,11 @@ h3 {
     color:#18D;
 }
 
+/* Mindwave */
+#flashContent {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    height: 40px;
+}

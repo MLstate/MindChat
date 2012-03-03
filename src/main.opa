@@ -319,7 +319,7 @@ server function init_client(user, client_channel, _) {
 
 server mindwave_flash =
   <div id="flashContent">
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="550" height="400" id="FlashToJs" align="middle">
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="220" height="40" id="FlashToJs" align="middle">
       <param name="movie" value="/resources/neurosky/FlashToJs/FlashToJs.swf" />
       <param name="quality" value="high" />
       <param name="bgcolor" value="#ffffff" />
@@ -332,7 +332,7 @@ server mindwave_flash =
       <param name="salign" value="" />
       <param name="allowScriptAccess" value="sameDomain" />
       {Xhtml.of_string_unsafe("<!--[if !IE]>-->")}
-      <object type="application/x-shockwave-flash" data="/resources/neurosky/FlashToJs/FlashToJs.swf" width="550" height="400">
+      <object type="application/x-shockwave-flash" data="/resources/neurosky/FlashToJs/FlashToJs.swf" width="220" height="40">
         <param name="movie" value="/resources/neurosky/FlashToJs/FlashToJs.swf" />
         <param name="quality" value="high" />
         <param name="bgcolor" value="#ffffff" />
@@ -375,6 +375,7 @@ exposed @async function enter_chat(user_name, has_mindwave, client_channel) {
       <h3>Users online</h3>
       <div id=#user_list/>
       {OpaShare.html()}
+      {mindwave_flash}
     </div>
     <div id=#content
          onready={function(e){
@@ -390,8 +391,7 @@ exposed @async function enter_chat(user_name, has_mindwave, client_channel) {
                onnewline={send_message(broadcast, _)}
                x-webkit-speech="x-webkit-speech"/>
       </div>
-    </div> <+>
-    mindwave_flash
+    </div>
 }
 
 client @async function join(_) {
