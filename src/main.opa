@@ -28,8 +28,8 @@ import mindwave
 
 /** Constants **/
 
-GITHUB_USER = "Aqua-Ye"
-GITHUB_REPO = "OpaChat"
+GITHUB_USER = "MLstate"
+GITHUB_REPO = "MindChat"
 NB_LAST_MSGS = 10
 MW_TIMER = 1000
 
@@ -356,7 +356,7 @@ server mindwave_flash =
   </div>
 
 client @async function send_message(broadcast, _) {
-  broadcast(Dom.get_value(#entry))
+  void broadcast(Dom.get_value(#entry))
   Dom.clear_value(#entry)
 }
 
@@ -366,7 +366,7 @@ exposed @async function enter_chat(user_name, has_mindwave, client_channel) {
     name: user_name,
     mindwave: if (has_mindwave) some((0, 0)) else none,
   }
-  broadcast = function(text) {
+  function broadcast(text) {
     message = {source:{user:user_name}, ~text, date:Date.now()}
     /history[?] <- message
     Network.broadcast({~message}, room)
