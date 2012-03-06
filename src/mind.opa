@@ -7,17 +7,19 @@ type mindstate = (int, int)
 /** MindWave **/
 
 client function level_to_prefix(level) {
-  if (level <= 33) "med"
-  else if (level <= 66) "att"
-  else "blnk"
+  // if (level <= 33) "med"
+  // else if (level <= 66) "att"
+  // else "blnk"
+  if (level > 50) "Glow"
+  else "Face"
 }
 
 client function mindwave_to_html(mindwave) {
   match (mindwave) {
   case {none}: <span class="ns-icon32 misc"/>
   case {some:(t, r)}:
-    preT = "{level_to_prefix(t)}Face"
-    preR = "{level_to_prefix(r)}Glow"
+    preT = "att{level_to_prefix(t)}" // Attention
+    preR = "med{level_to_prefix(r)}" // Meditation
     <span class="ns-icon32 {preR}"></span>
     <span class="ns-icon32 {preT}"></span>
   }
@@ -39,12 +41,10 @@ client function mind_changed(new_state) {
     match (new_state) {
     case {none}: true
     case {some:(thinking, relaxation)}:
-      thinking <= 33 && t > 33 ||
-      thinking <= 66 && (t > 66 || t <= 33) ||
-      thinking > 66 && t <= 66 ||
-      relaxation <= 33 && r > 33 ||
-      relaxation <= 66 && (r > 66 || r <= 33) ||
-      relaxation > 66 && r <= 66
+      thinking <= 50 && t > 50 ||
+      thinking > 50 && t <= 50 ||
+      relaxation <= 50 && r > 50 ||
+      relaxation > 50 && r <= 50
     }
   }
 }
