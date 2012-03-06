@@ -1,17 +1,3 @@
-// var MindWave = (function () {
-//     return {
-//         isPresent: function() {
-//             return Math.random() > 0.1;
-//         },
-//         getThinkingLevel: function() {
-//             return Math.floor(Math.random()*101);
-//         },
-//         getRelaxationLevel: function() {
-//             return Math.floor(Math.random()*101);
-//         }
-//     };
-// }());
-
 ##register is_present : -> bool
 ##args()
 {
