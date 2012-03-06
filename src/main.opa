@@ -314,8 +314,6 @@ server function init_client(user, client_channel, _) {
   len = List.length(history_list)
   history = List.drop(len-NB_LAST_MSGS, history_list)
   message_update(compute_stats(), history)
-  // Initialize OpaShare
-  OpaShare.init(file_uploaded(user))
 }
 
 server mindwave_flash =
@@ -375,7 +373,6 @@ exposed @async function enter_chat(user_name, has_mindwave, client_channel) {
     <div id=#sidebar>
       <h3>Users online</h3>
       <div id=#user_list/>
-      {OpaShare.html()}
       {mindwave_flash}
     </div>
     <div id=#content
@@ -457,13 +454,6 @@ server function start() {
 
 // Parse URL
 url_parser = parser {
-  // case "/file/" key=Rule.integer:
-  //   match (OpaShare.get(key)) {
-  //   case {some:file}:
-  //     Resource.binary(file.content, file.mimetype)
-  //     |> Resource.add_header(_, {content_disposition:{attachment:file.name}})
-  //   default: start()
-  //   }
   case (.*): start()
 }
 
