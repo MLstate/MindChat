@@ -19,14 +19,21 @@ var MindWave = {
 	this.mRelaxationLevel = relaxationLevel;
 	this.log("setRelaxationLevel("+this.mRelaxationLevel+")");
     },
-    isPresent:function() {
-	return this.mIcon > 0;
+    displayIcon:function() {
+	this.log("getIcon("+this.mIcon+")");
+	return this.mIcon >= 0 && this.mIcon < 200;
     },
     getThinkingLevel:function() {
-	return this.mThinkinLevel;
+	this.log("getThinkingLevel("+this.mThinkingLevel+")");
+	var t = this.mThinkinLevel;
+	if (t) return t;
+	return 0;
     },
     getRelaxationLevel:function() {
-	return this.mRelaxationLevel;
+	this.log("getRelaxationLevel("+this.mRelaxationLevel+")");
+	var r = this.mRelaxationLevel;
+	if (r) return r;
+	return 0;
     },
     log:function(message) {
 	console.log(message);

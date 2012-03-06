@@ -15,7 +15,7 @@
 ##register is_present : -> bool
 ##args()
 {
-    return MindWave.isPresent();
+    return MindWave.displayIcon();
 }
 
 ##register get_thinking_level : -> int
