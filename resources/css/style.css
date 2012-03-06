@@ -173,4 +173,5 @@ h3 {
     right: 0;
     bottom: 8px;
     height: 40px;
+    visibility: hidden;
 }
