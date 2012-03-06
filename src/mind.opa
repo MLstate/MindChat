@@ -18,7 +18,8 @@ client function mindwave_to_html(mindwave) {
   case {some:(t, r)}:
     preT = "{level_to_prefix(t)}Face"
     preR = "{level_to_prefix(r)}Glow"
-    <span class="ns-icon32 {preR}"><span class="ns-icon32 {preT}"/></span>
+    <span class="ns-icon32 {preR}"></span>
+    <span class="ns-icon32 {preT}"></span>
   }
 }
 
