@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/71/trunk/tests/src/com/adobe/crypto
+END
+HMACMD5Test.as
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/71/trunk/tests/src/com/adobe/crypto/HMACMD5Test.as
+END
+WSSEUsernameTokenTest.as
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/55/trunk/tests/src/com/adobe/crypto/WSSEUsernameTokenTest.as
+END
+SHA224Test.as
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/55/trunk/tests/src/com/adobe/crypto/SHA224Test.as
+END
+MD5Test.as
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/55/trunk/tests/src/com/adobe/crypto/MD5Test.as
+END
+HMACSHA1Test.as
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/71/trunk/tests/src/com/adobe/crypto/HMACSHA1Test.as
+END
+SHA256Test.as
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/55/trunk/tests/src/com/adobe/crypto/SHA256Test.as
+END
+SHA1Test.as
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/55/trunk/tests/src/com/adobe/crypto/SHA1Test.as
+END
