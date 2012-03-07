@@ -25,7 +25,7 @@ var MindWave = {
     },
     getThinkingLevel:function() {
 	this.log("getThinkingLevel("+this.mThinkingLevel+")");
-	var t = this.mThinkinLevel;
+	var t = this.mThinkingLevel;
 	if (t) return t;
 	return 0;
     },
