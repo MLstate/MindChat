@@ -21,7 +21,7 @@ var MindWave = {
     },
     displayIcon:function() {
 	this.log("getIcon("+this.mIcon+")");
-	return this.mIcon >= 0 && this.mIcon < 200;
+	return this.mIcon >= 0;
     },
     getThinkingLevel:function() {
 	this.log("getThinkingLevel("+this.mThinkingLevel+")");
