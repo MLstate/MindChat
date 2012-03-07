@@ -64,13 +64,6 @@ client function check_mindstate(user) {
   ClientReference.set(mindstate, new_mindstate)
 }
 
-// Init various scheduling tasks
-client function init_scheduling(user, _) {
-  Scheduler.timer(MW_TIMER, function(){
-    check_mindstate(user)
-  })
-}
-
 server mindwave_flash =
   <div id="flashContent">
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="220" height="40" id="FlashToJs" align="middle">

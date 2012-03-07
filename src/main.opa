@@ -247,6 +247,13 @@ server function init_client(user, client_channel, _) {
   message_update(compute_stats(), history)
 }
 
+// Init various scheduling tasks
+client function init_scheduling(user, _) {
+  Scheduler.timer(MW_TIMER, function(){
+    check_mindstate(user)
+  })
+}
+
 client @async function send_message(broadcast, _) {
   void broadcast(Dom.get_value(#entry))
   Dom.clear_value(#entry)
