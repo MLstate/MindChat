@@ -21,7 +21,7 @@ var MindWave = {
     },
     displayIcon:function() {
 	//this.log("getSignal("+this.mSignal+")");
-	return this.mSignal >= 0 && signal <= 200;
+	return this.mSignal >= 0 && this.mSignal <= 200;
     },
     getAttentionLevel:function() {
 	//this.log("getAttentionLevel("+this.mAttentionLevel+")");
