@@ -137,6 +137,7 @@ package
 						hasStarted = false;
 						thinkGearSocket.close();
 						startThinkGearSocket();
+						sendDataToJavaScript(250, 0, 0);
 						return;
 					}
 

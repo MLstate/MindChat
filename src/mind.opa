@@ -37,14 +37,16 @@ client function mind_changed(new_state) {
   case {none}: Option.is_some(new_state)
   case {some:(t, r)}:
     match (new_state) {
-    case {none}: true
+    case {none}: (t > 0 || r > 0)
     case {some:(attention, meditation)}:
-      attention <= 33 && t > 33 ||
-      attention <= 66 && (t > 66 || t <= 33) ||
-      attention > 66 && t <= 66 ||
-      meditation <= 33 && r > 33 ||
-      meditation <= 66 && (r > 66 || r <= 33) ||
-      meditation > 66 && r <= 66
+      Int.abs(attention - t) > 10
+      || Int.abs(meditation - r) > 10
+      // attention <= 33 && t > 33 ||
+      // attention <= 66 && (t > 66 || t <= 33) ||
+      // attention > 66 && t <= 66 ||
+      // meditation <= 33 && r > 33 ||
+      // meditation <= 66 && (r > 66 || r <= 33) ||
+      // meditation > 66 && r <= 66
     }
   }
 }
