@@ -6,20 +6,20 @@ type mindstate = (int, int)
 
 /** MindWave **/
 
-client function level_to_prefix(level) {
-  if (level <= 33) "med"
-  else if (level <= 66) "att"
-  else "blnk"
-}
-
 client function mindwave_to_html(mindwave) {
   match (mindwave) {
   case {none}: <span class="ns-icon32 misc"/>
   case {some:(a, m)}:
-    preA = "{level_to_prefix(a)}Face"
-    preM = "{level_to_prefix(m)}Glow"
-    <span class="ns-icon32 {preA}"></span>
-    <span class="ns-icon32 {preM}"></span>
+    ao = Int.to_float(a) / 100.
+    mo = Int.to_float(m) / 100.
+    <span class="ns-icon32 attFace">
+      <span class="ns-icon32 attGlow"
+            style="opacity:{ao}; filter:alpha(opacity={a});"/>
+    </span>
+    <span class="ns-icon32 medFace">
+      <span class="ns-icon32 medGlow"
+            style="opacity:{mo}; filter:alpha(opacity={m});"/>
+    </span>
   }
 }
 
