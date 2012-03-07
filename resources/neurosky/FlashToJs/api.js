@@ -20,17 +20,17 @@ var MindWave = {
 	this.log("setMeditationLevel("+this.mMeditationLevel+")");
     },
     displayIcon:function() {
-	this.log("getSignal("+this.mSignal+")");
-	return this.mSignal >= 0;
+	//this.log("getSignal("+this.mSignal+")");
+	return this.mSignal >= 0 && signal <= 200;
     },
     getAttentionLevel:function() {
-	this.log("getAttentionLevel("+this.mAttentionLevel+")");
+	//this.log("getAttentionLevel("+this.mAttentionLevel+")");
 	var t = this.mAttentionLevel;
 	if (t) return t;
 	return 0;
     },
     getMeditationLevel:function() {
-	this.log("getMeditationLevel("+this.mMeditationLevel+")");
+	//this.log("getMeditationLevel("+this.mMeditationLevel+")");
 	var r = this.mMeditationLevel;
 	if (r) return r;
 	return 0;
