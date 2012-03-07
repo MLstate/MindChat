@@ -311,7 +311,7 @@ fork_button =
 
 function build_page(content) {
   <div id=#header>
-    <h2 class="pull-left">OpaChat</h2>
+    <h2 class="pull-left">MindChat</h2>
     <div class="buttons pull-left">
       {watch_button}
       {fork_button}
@@ -333,7 +333,7 @@ headers =
 // Start page
 server function start() {
   page = build_page(
-    <h3>A real-time web chat built in Opa.</h3>
+    <h3>The webchat that shows how you feel.</h3>
     <div id=#login class="form-inline">
       <input id=#name
              placeholder="Name"
@@ -345,7 +345,7 @@ server function start() {
     </div>
   )
   Resource.full_page_with_doctype(
-    "OpaChat - a real-time web chat built in Opa",
+    "MindChat",
     {html5},
     page, headers, {success},
     []
