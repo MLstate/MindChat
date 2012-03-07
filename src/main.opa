@@ -312,7 +312,7 @@ fork_button =
 function build_page(content) {
   <div id=#header>
     <h2 class="pull-left">OpaChat</h2>
-    <div class="buttons pull-right">
+    <div class="buttons pull-left">
       {watch_button}
       {fork_button}
     </div>
