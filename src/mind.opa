@@ -15,11 +15,11 @@ client function level_to_prefix(level) {
 client function mindwave_to_html(mindwave) {
   match (mindwave) {
   case {none}: <span class="ns-icon32 misc"/>
-  case {some:(t, r)}:
-    preT = "{level_to_prefix(t)}Face"
-    preR = "{level_to_prefix(r)}Glow"
-    <span class="ns-icon32 {preR}"></span>
-    <span class="ns-icon32 {preT}"></span>
+  case {some:(a, m)}:
+    preA = "{level_to_prefix(a)}Face"
+    preM = "{level_to_prefix(m)}Glow"
+    <span class="ns-icon32 {preA}"></span>
+    <span class="ns-icon32 {preM}"></span>
   }
 }
 
@@ -38,13 +38,13 @@ client function mind_changed(new_state) {
   case {some:(t, r)}:
     match (new_state) {
     case {none}: true
-    case {some:(thinking, relaxation)}:
-      thinking <= 33 && t > 33 ||
-      thinking <= 66 && (t > 66 || t <= 33) ||
-      thinking > 66 && t <= 66 ||
-      relaxation <= 33 && r > 33 ||
-      relaxation <= 66 && (r > 66 || r <= 33) ||
-      relaxation > 66 && r <= 66
+    case {some:(attention, meditation)}:
+      attention <= 33 && t > 33 ||
+      attention <= 66 && (t > 66 || t <= 33) ||
+      attention > 66 && t <= 66 ||
+      meditation <= 33 && r > 33 ||
+      meditation <= 66 && (r > 66 || r <= 33) ||
+      meditation > 66 && r <= 66
     }
   }
 }
@@ -52,10 +52,10 @@ client function mind_changed(new_state) {
 client function check_mindstate(user) {
   new_mindstate =
     if (MindWave.is_present()) {
-      thinking = MindWave.get_thinking_level()
-      relaxation = MindWave.get_relaxation_level()
-      Log.info("MindWave", "thinking:{thinking} - relaxation:{relaxation}")
-      some((thinking, relaxation))
+      attention = MindWave.get_attention_level()
+      meditation = MindWave.get_meditation_level()
+      Log.info("MindWave", "attention:{attention} - meditation:{meditation}")
+      some((attention, meditation))
     } else none
   if (mind_changed(new_mindstate)) {
     user = { user with mindwave:new_mindstate }

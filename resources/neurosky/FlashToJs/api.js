@@ -4,34 +4,34 @@ var GLOBALS = {
 };
 
 var MindWave = {
-    mIcon:-1,
-    mThinkingLevel:-1,
-    mRelaxationLevel:-1,
-    setIconValue:function(iconValue) {
-	this.mIcon = iconValue;
-	this.log("setIcon("+this.mIcon+")");
+    mSignal:-1,
+    mAttentionLevel:-1,
+    mMeditationLevel:-1,
+    setSignalValue:function(iconValue) {
+	this.mSignal = iconValue;
+	this.log("setSignal("+this.mSignal+")");
     },
-    setThinkingLevel:function(thinkingLevel) {
-	this.mThinkingLevel = thinkingLevel;
-	this.log("setThinkingLevel("+this.mThinkingLevel+")");
+    setAttentionLevel:function(thinkingLevel) {
+	this.mAttentionLevel = thinkingLevel;
+	this.log("setAttentionLevel("+this.mAttentionLevel+")");
     },
-    setRelaxationLevel:function(relaxationLevel) {
-	this.mRelaxationLevel = relaxationLevel;
-	this.log("setRelaxationLevel("+this.mRelaxationLevel+")");
+    setMeditationLevel:function(relaxationLevel) {
+	this.mMeditationLevel = relaxationLevel;
+	this.log("setMeditationLevel("+this.mMeditationLevel+")");
     },
     displayIcon:function() {
-	this.log("getIcon("+this.mIcon+")");
-	return this.mIcon >= 0;
+	this.log("getSignal("+this.mSignal+")");
+	return this.mSignal >= 0;
     },
-    getThinkingLevel:function() {
-	this.log("getThinkingLevel("+this.mThinkingLevel+")");
-	var t = this.mThinkingLevel;
+    getAttentionLevel:function() {
+	this.log("getAttentionLevel("+this.mAttentionLevel+")");
+	var t = this.mAttentionLevel;
 	if (t) return t;
 	return 0;
     },
-    getRelaxationLevel:function() {
-	this.log("getRelaxationLevel("+this.mRelaxationLevel+")");
-	var r = this.mRelaxationLevel;
+    getMeditationLevel:function() {
+	this.log("getMeditationLevel("+this.mMeditationLevel+")");
+	var r = this.mMeditationLevel;
 	if (r) return r;
 	return 0;
     },
@@ -51,3 +51,18 @@ function isReady() {
 $(document).ready(function() {
     GLOBALS.jsReady = true;
 });
+
+// var MindWave = (function () {
+//     return {
+//         isPresent: function() {
+//             return Math.random() > 0.1;
+//         },
+//         getAttentionLevel: function() {
+//             return Math.floor(Math.random()*101);
+//         },
+//         getRelaxationLevel: function() {
+//             return Math.floor(Math.random()*101);
+//         }
+//     };
+// }());
+
