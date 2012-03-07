@@ -104,7 +104,7 @@ package
 				{//sometimes the line is blank so skip the line
 					try
 					{
-						log(packet);
+						log("Packet: "+packet);
 						data = JSON.decode(packet);
 						//decode the data to an array
 						if (data["poorSignalLevel"] != null)
